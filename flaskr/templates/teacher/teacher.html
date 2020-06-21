@@ -1,0 +1,265 @@
+{% extends "layout.html" %}
+{% block title %}教师列表{% endblock %}
+{% block head %}
+  {{ super() }}
+  <style type="text/css">
+    .important { color: #336699; }
+  </style>
+{% endblock %}
+{% block content %}
+<span class="layui-breadcrumb">
+  <a href="">首页</a>
+  <a href="">教师管理</a>
+  <a><cite>教师列表</cite></a>
+</span>
+  <table class="layui-hide" id="test"  lay-filter="test"></table>
+<script type="text/html" id="toolbarDemo">
+  <div class="layui-btn-container">
+    <button class="layui-btn layui-btn-sm layui-bg-blue" lay-event="add">添加</button>
+    <button class="layui-btn layui-btn-sm layui-bg-orange" lay-event="delete">删除</button>
+  </div>
+</script>
+
+{% endblock %}
+{% block script %}
+<script  src="{{ url_for('static', filename='tool.js') }}"></script>
+
+<div style="display:none; padding-right:10px;padding-top:10px;" id="teacher_form" >
+  <form class="layui-form" action="" lay-filter="teacher_form">
+    <div class="layui-form-item">
+      <label class="layui-form-label">姓名</label>
+      <div class="layui-input-block">
+        <input type="text" name="name" required  lay-verify="required" placeholder="请输入姓名" autocomplete="off" class="layui-input">
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <div class="layui-inline">
+        <label class="layui-form-label">性别</label>
+        <div class="layui-input-inline">
+            <select name="sex">
+              <option value="男">男</option>
+              <option value="女">女</option>
+            </select>
+        </div>
+      </div>
+      <div class="layui-inline">
+        <label class="layui-form-label">民族</label>
+        <div class="layui-input-inline">
+          <input type="text" name="nation" required  lay-verify="required" autocomplete="off" class="layui-input" value="汉">
+        </div>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <div class="layui-inline">
+        <label class="layui-form-label">学历</label>
+        <div class="layui-input-inline">
+            <select name="education">
+              <option value="小学">小学</option>
+              <option value="初中">初中</option>
+              <option value="中专">中专</option>
+              <option value="高中">高中</option>
+              <option value="大专">大专</option>
+              <option value="本科" selected>本科</option>
+              <option value="硕士">硕士</option>
+              <option value="博士">博士</option>
+            </select>
+        </div>
+      </div>
+      <div class="layui-inline">
+        <label class="layui-form-label">毕业院校</label>
+        <div class="layui-input-inline">
+          <input type="text" name="graduation" required  lay-verify="required" autocomplete="off" class="layui-input">
+        </div>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <div class="layui-inline">
+        <label class="layui-form-label">出生日期</label>
+        <div class="layui-input-inline">
+          <input type="text" name="birth_date" id="birth_date" class="layui-input" autocomplete="off" required  lay-verify="required">
+        </div>
+      </div>
+      <div class="layui-inline">
+        <label class="layui-form-label">年龄</label>
+        <div class="layui-input-inline">
+          <input type="text" name="age"  id="birth_date_age"autocomplete="off" class="layui-input"  lay-verify="required|number">
+        </div>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <div class="layui-inline">
+        <label class="layui-form-label">入职日期</label>
+        <div class="layui-input-inline">
+          <input type="text" name="check_in" id="check_in_date"autocomplete="off" class="layui-input" >
+        </div>
+      </div>
+      <div class="layui-inline">
+        <label class="layui-form-label">工龄</label>
+        <div class="layui-input-inline">
+          <input type="text" name="working_years" id="working_years"  lay-verify="required|number" value="0" autocomplete="off" class="layui-input">
+        </div>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <div class="layui-inline">
+        <label class="layui-form-label">固定电话</label>
+        <div class="layui-input-inline">
+          <input type="text" name="f_phone" placeholder="请输入固定电话" lay-verify="phone|number" autocomplete="off" class="layui-input">
+        </div>
+      </div>
+      <div class="layui-inline">
+        <label class="layui-form-label">移动电话</label>
+        <div class="layui-input-inline">
+          <input type="text" name="m_phone" placeholder="请输入移动电话" lay-verify="phone|number"autocomplete="off" class="layui-input">
+        </div>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label">住址</label>
+      <div class="layui-input-block">
+        <input type="text" name="address" placeholder="请输入住址"  required  lay-verify="required"autocomplete="off" class="layui-input">
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label">电子邮箱</label>
+      <div class="layui-input-block">
+        <input type="text" name="email"  placeholder="请输入电子邮箱" required  lay-verify="email" autocomplete="off" class="layui-input">
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <div class="layui-input-block">
+        <button class="layui-btn" lay-submit lay-filter="teacher_submit">立即提交</button>
+        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+      </div>
+    </div>
+  </form>
+</div>
+<script>
+layui.use(['table','laydate','form'], function(){
+  var table = layui.table,laydate = layui.laydate,form = layui.form;
+<!--  时间选择器绑定 -->
+  laydate.render({
+    elem: '#birth_date'
+    ,done: function(value, date, endDate){
+        $("#birth_date_age").val(jsGetAge(value))
+      }
+  });
+  laydate.render({
+    elem: '#check_in_date'
+    ,value: new Date()
+    ,done: function(value, date, endDate){
+        $("#working_years").val(jsGetAge(value))
+      }
+  });
+
+  table.render({
+    elem: '#test'
+    ,id: 'teacher_table'
+    ,url:'/api/teacher'
+    ,cellMinWidth: 80
+    ,toolbar: '#toolbarDemo'
+    ,page: true
+    ,cols: [[
+      {type:'checkbox', width:80}
+      ,{field:'name', width:80, title: '姓名'}
+      ,{field:'status', width:80, title: '性别'}
+      ,{field:'nation', width:80, title: '民族'}
+      ,{field:'age', width:80, title: '年龄', sort: true}
+      ,{field:'working_years', width:80, title: '工龄', sort: true}
+      ,{field:'education', width:137, title: '学历'}
+      ,{field:'f_phone', width:137, title: '固定电话'}
+      ,{field:'m_phone', width:137, title: '移动电话'}
+      ,{field:'email', width:187, title: '邮箱'}
+      ,{field:'add_date', width:187, title: '创建时间'}
+    ]]
+  });
+  table.on('sort(test)', function(obj){
+    table.reload('teacher_table', {
+      initSort: obj
+      ,where: {
+        field: obj.field //排序字段
+        ,order: obj.type //排序方式
+      }
+    });
+  });
+  //监听行单击事件
+  table.on('row(test)', function(obj){
+    var teacher_form_layer = teacher_form_open(obj.data)
+    save_teacher(teacher_form_layer, 'teacher_table', [obj.data.id])
+  });
+  table.on('toolbar(test)', function(obj){
+    var checkStatus = table.checkStatus(obj.config.id);
+    var data = checkStatus.data;
+    switch(obj.event){
+      case 'add':
+        var teacher_form_layer = teacher_form_open()
+        save_teacher(teacher_form_layer, 'teacher_table')
+      break;
+      case 'delete':
+        var del_id = []
+        for (var i = 0;  i<data.length;i++){
+        console.log(data[i].id)
+          del_id.push(data[i].id);
+        }
+
+        save_teacher_ajax('', 'teacher_table',{'teacher_id':del_id, 'del_type': 1, 'status':-1})
+      break;
+      case 'update':
+        layer.msg('编辑');
+      break;
+    };
+  });
+  function save_teacher_ajax(teacher_form_layer, table_id,post_data){
+     $.ajax({
+          url: '/api/teacher',
+          data: post_data,
+          type: "POST",
+          dataType: "json",
+          success: function(data) {
+            if(data.code === 0){
+              layer.msg('保存成功！');
+              if(teacher_form_layer!==''){
+                layer.close(teacher_form_layer)
+              }
+              table.reload(table_id)
+            }else{
+              layer.msg(data.msg);
+
+            }
+          }
+      });
+  }
+  function save_teacher(teacher_form_layer, table_id,teacher_id){
+    if(teacher_id === undefined){
+      teacher_id = -1;
+    }
+    form.on('submit(teacher_submit)', function(data){
+      var post_data = data.field;
+      post_data['teacher_id'] = teacher_id;
+     save_teacher_ajax(teacher_form_layer, table_id,post_data)
+      return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+    });
+  }
+
+  function teacher_form_open(teacher_data){
+    var title = '修改教师信息';
+    if(teacher_data===undefined){
+      title = '新增教师信息';
+    }else{
+      form.val("teacher_form", teacher_data);
+    }
+    var teacher_form_layer = layer.open({
+      type: 1,
+      area: ['700px','560px'],
+      shadeClose: true,
+      title : title,
+        content: $("#teacher_form")
+      });
+     return teacher_form_layer
+  }
+
+
+
+});
+</script>
+{% endblock %}

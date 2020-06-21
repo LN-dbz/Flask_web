@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+{% block title %}用户管理{% endblock %}
+{% block head %}
+  {{ super() }}
+  <style type="text/css">
+    .important { color: #336699; }
+  </style>
+{% endblock %}
+{% block content %}
+  <table class="layui-hide" id="test"></table>
+{% endblock %}
+{% block script %}
+<script>
+layui.use('table', function(){
+  var table = layui.table;
+
+  table.render({
+    elem: '#test'
+    ,url:'/api/user'
+    ,cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+    ,cols: [[
+      {field:'id', width:80, title: 'ID', sort: true}
+      ,{field:'username', width:80, title: '用户名'}
+      ,{field:'passwd', width:80, title: '密码'}
+      ,{field:'role', width:80, title: '角色'}
+      ,{field:'wealth', width:137, title: '财富', sort: true}
+    ]]
+  });
+});
+</script>
+{% endblock %}

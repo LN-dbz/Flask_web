@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>登录</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='reset.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='layui/css/layui.css') }}">
+  <style>
+  html, body {
+	margin: 0;
+	padding: 0;
+	height: 100%;
+}
+#floater {
+	float: left;
+	height: 50%;
+	margin-bottom: -140px;
+}
+
+#top {
+	float: right;
+	width: 100%;
+	text-align: center;
+}
+
+#content {
+	clear: both;
+	margin:auto;
+	height: 265px;
+	width: 500px;
+	position: relative;
+}
+  </style>
+</head>
+<body>
+<div id="top">
+</div>
+<div id="floater"></div>
+<div id="content">
+  <form class="layui-form" action="/login" method="post" style="padding:5px;padding-top:25px; ">
+  <div class="layui-form-item">
+    <label class="layui-form-label">用户名</label>
+    <div class="layui-input-block">
+      <input type="text" name="username" lay-verify="required"  lay-verify="required"  autocomplete="off"
+             lay-reqtext="用户名是必填项，岂能为空？" placeholder="请输入用户名" class="layui-input">
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label">密码</label>
+    <div class="layui-input-block">
+      <input type="text" name="passwd" lay-verify="required" lay-reqtext="密码是必填项，岂能为空？" placeholder="请输入密码"
+             autocomplete="off" class="layui-input">
+    </div>
+  </div>
+    <div class="layui-form-item">
+    <div class="layui-input-block">
+
+      <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1">登录</button>
+        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+    </div>
+  </div>
+  </form>
+</div>
+<script src="{{ url_for('static', filename='layui/layui.js') }}"></script>
+<script>
+layui.use(['form', 'layedit', 'laydate'], function(){
+  var form = layui.form});
+  </script>
+</body>
+</html>
